@@ -23,12 +23,6 @@ namespace WebAddressbookTests
             
             driver = new FirefoxDriver();
 
-           // FirefoxOptions options = new FirefoxOptions();
-           // options.BrowserExecutableLocation = ("C:\\Program Files\\Mozilla Firefox\\firefox.exe"); //This is the location where you have installed Firefox on your machine
-
-        //WebDriver driver = new FirefoxDriver(options);
-
-
                 baseURL = "http://localhost/addressbook";
             verificationErrors = new StringBuilder();
         }
