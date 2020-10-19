@@ -12,13 +12,6 @@ namespace WebAddressbookTests
             this.name = name;
         }
 
-       // public GroupData(string name, string heder, string footer)
-       // {
-       //     this.name = name;
-      //      this.heder = heder;
-       //     this.footer = footer;
-      //  }
-
 
         public string Name
         {
