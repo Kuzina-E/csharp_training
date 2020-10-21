@@ -8,41 +8,80 @@ namespace WebAddressbookTests
         {
         }
 
+        public ContactHelper Remove(int v)
+        {
+            SelectContact(v);
+            RemoveContact();
+          
+            return this;
+        }
+
+        public ContactHelper Modify(int v, ContactData newData)
+        {
+            SelectContact(v);
+           
+            InitContactModification();
+            FillContactForm(newData);
+            SubmitContactModification();
+            return this;
+        }
+
+        public ContactHelper SubmitContactModification()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
+        public ContactHelper InitContactModification()
+        {
+            driver.FindElement(By.XPath("//img[@alt='Edit']")).Click();
+            return this;
+        }
+
+        public ContactHelper RemoveContact()
+        {
+            driver.FindElement(By.XPath("//*[@value='Delete']")).Click();
+            driver.SwitchTo().Alert().Accept();
+            return this;
+        }
+
+        public ContactHelper SelectContact(int index)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            return this;
+        }
+
         public ContactHelper Create(ContactData group)
         {
             manager.Navigator.GoToContactsPage();
             InitContactCreation();
             FillContactForm(group);
             SubmitContactCreation();
-            ReturnToContactsPage();
+            manager.Navigator.ReturnToHomePage();
             return this;
         }
 
-        public void ReturnToContactsPage()
-        {
-            driver.FindElement(By.LinkText("home page")).Click();
-        }
-
-        public void SubmitContactCreation()
+        public ContactHelper SubmitContactCreation()
         {
             driver.FindElement(By.Name("submit")).Click();
+            return this;
         }
 
-        public void FillContactForm(ContactData contact)
+        public ContactHelper FillContactForm(ContactData contact)
         {
             driver.FindElement(By.Name("firstname")).Click();
             driver.FindElement(By.Name("firstname")).Clear();
             driver.FindElement(By.Name("firstname")).SendKeys(contact.FirstName);
-            driver.FindElement(By.Name("theform")).Click();
             driver.FindElement(By.Name("lastname")).Click();
             driver.FindElement(By.Name("lastname")).Clear();
             driver.FindElement(By.Name("lastname")).SendKeys(contact.LastName);
+            return this;
         }
 
-        public void InitContactCreation()
+        public ContactHelper InitContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
-           // return this;
+            return this;
         }
         
     }
