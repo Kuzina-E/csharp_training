@@ -8,22 +8,65 @@ namespace WebAddressbookTests
         {
         }
 
-        public ContactHelper Remove(int v)
+    public ContactHelper Remove(int v)
         {
-            SelectContact(v);
-            RemoveContact();
-          
-            return this;
+            if (ContactIsPresent())
+            {
+                SelectContact(v);
+                RemoveContact();
+
+                return this;
+            }
+            else
+            {
+                CreateNewContact();
+                SelectContact(v);
+                RemoveContact();
+                return this;
+
+            }
         }
+
+        private bool ContactIsPresent()
+        {
+            return
+                IsElementPresent(By.Name("entry"));
+        }
+
+        private void CreateNewContact()
+        {
+            InitContactCreation();
+            Type(By.Name("firstname"), "1");
+            Type(By.Name("lastname"), "1");
+            SubmitContactCreation();
+            manager.Navigator.ReturnToHomePage();
+
+
+        }
+
+
 
         public ContactHelper Modify(int v, ContactData newData)
         {
-            SelectContact(v);
+            if (ContactIsPresent())
+            {
+                SelectContact(v);
+
+                InitContactModification();
+                FillContactForm(newData);
+                SubmitContactModification();
+                return this;
+            }
+            else
+            {
+                CreateNewContact();
+                SelectContact(v);
+                InitContactModification();
+                FillContactForm(newData);
+                SubmitContactModification();
+                return this;
+            }
            
-            InitContactModification();
-            FillContactForm(newData);
-            SubmitContactModification();
-            return this;
         }
 
         public ContactHelper SubmitContactModification()
@@ -69,12 +112,9 @@ namespace WebAddressbookTests
 
         public ContactHelper FillContactForm(ContactData contact)
         {
-            driver.FindElement(By.Name("firstname")).Click();
-            driver.FindElement(By.Name("firstname")).Clear();
-            driver.FindElement(By.Name("firstname")).SendKeys(contact.FirstName);
-            driver.FindElement(By.Name("lastname")).Click();
-            driver.FindElement(By.Name("lastname")).Clear();
-            driver.FindElement(By.Name("lastname")).SendKeys(contact.LastName);
+            Type(By.Name("firstname"), contact.FirstName);
+            Type(By.Name("lastname"), contact.LastName);
+            
             return this;
         }
 
