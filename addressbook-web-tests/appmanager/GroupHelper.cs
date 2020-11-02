@@ -27,63 +27,50 @@ namespace WebAddressbookTests
 
             manager.Navigator.GoToGroupsPage();
 
-            if (GroupIsPresent())
-            {
+   
                 SelectGroup(v);
                 RemoveGroup();
                 ReturnToGroupsPage();
                 return this;
-            }
-            else
-            {
-                CreateNewGroup();
-                SelectGroup(v);
-                RemoveGroup();
-                ReturnToGroupsPage();
-                return this;
-            }
-            
+      
         }
 
-        private bool GroupIsPresent()
+       private bool GroupIsPresent()
         {
             return
                 IsElementPresent(By.Name("selected[]"));
-
+     
         }
-
-        private GroupHelper CreateNewGroup()
-        {
-            InitGroupCreation();
-            Type(By.Name("group_name"), "1");
-            Type(By.Name("group_header"), "1");
-            Type(By.Name("group_footer"), "1");
-            SubmitGroupCreation();
-            ReturnToGroupsPage();
-            return this;
-        }
-
-        public GroupHelper Modify(int v, GroupData newData)
+        public GroupHelper CheckGroupIsPresent(int index)
         {
             manager.Navigator.GoToGroupsPage();
 
             if (GroupIsPresent())
             {
-                SelectGroup(v);
-                InitGroupModification();
-                FillGroupForm(newData);
-                SubmitGroupModification();
                 return this;
             }
             else
             {
-                CreateNewGroup();
+                ApplicationManager app = ApplicationManager.GetInstance();
+                GroupData group = new GroupData("1");
+                app.Groups.Create(group);
+                return this;
+            }
+        }
+
+       
+
+        public GroupHelper Modify(int v, GroupData newData)
+        {
+            manager.Navigator.GoToGroupsPage();
+
+
                 SelectGroup(v);
                 InitGroupModification();
                 FillGroupForm(newData);
                 SubmitGroupModification();
                 return this;
-            }
+
 
         }
 

@@ -8,6 +8,7 @@ namespace WebAddressbookTests
             [Test]
             public void TheDeleteGroupTest()
         {
+            app.Groups.CheckGroupIsPresent(1);
             app.Groups.Remove(1);
         
         }

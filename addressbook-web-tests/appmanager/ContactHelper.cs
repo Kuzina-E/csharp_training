@@ -10,63 +10,44 @@ namespace WebAddressbookTests
 
     public ContactHelper Remove(int v)
         {
-            if (ContactIsPresent())
-            {
                 SelectContact(v);
                 RemoveContact();
 
+                return this;
+        }
+
+      private bool ContactIsPresent()
+         {
+            return
+                 IsElementPresent(By.Name("entry"));
+        }
+
+
+        public ContactHelper CheckContactIsPresent(int index)
+        {
+            if (ContactIsPresent())
+            {
                 return this;
             }
             else
             {
-                CreateNewContact();
-                SelectContact(v);
-                RemoveContact();
+                ApplicationManager app = ApplicationManager.GetInstance();
+                ContactData contact = new ContactData("1","1");
+                app.Contacts.Create(contact);
                 return this;
-
             }
         }
-
-        private bool ContactIsPresent()
-        {
-            return
-                IsElementPresent(By.Name("entry"));
-        }
-
-        private void CreateNewContact()
-        {
-            InitContactCreation();
-            Type(By.Name("firstname"), "1");
-            Type(By.Name("lastname"), "1");
-            SubmitContactCreation();
-            manager.Navigator.ReturnToHomePage();
-
-
-        }
-
-
-
+ 
         public ContactHelper Modify(int v, ContactData newData)
         {
-            if (ContactIsPresent())
-            {
+    
                 SelectContact(v);
 
                 InitContactModification();
                 FillContactForm(newData);
                 SubmitContactModification();
                 return this;
-            }
-            else
-            {
-                CreateNewContact();
-                SelectContact(v);
-                InitContactModification();
-                FillContactForm(newData);
-                SubmitContactModification();
-                return this;
-            }
-           
+   
         }
 
         public ContactHelper SubmitContactModification()
@@ -94,11 +75,11 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public ContactHelper Create(ContactData group)
+        public ContactHelper Create(ContactData contact)
         {
             manager.Navigator.GoToContactsPage();
             InitContactCreation();
-            FillContactForm(group);
+            FillContactForm(contact);
             SubmitContactCreation();
             manager.Navigator.ReturnToHomePage();
             return this;
