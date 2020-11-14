@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 
 
@@ -14,7 +15,18 @@ namespace WebAddressbookTests
             group.Heder = "ddd";
             group.Footer = "sss";
 
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
             app.Groups.Create(group);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+
+            Assert.AreEqual(oldGroups, newGroups);
+
             app.Auth.Logout();
         }
 
@@ -24,8 +36,41 @@ namespace WebAddressbookTests
             GroupData group = new GroupData("");
             group.Heder = "";
             group.Footer = "";
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
 
             app.Groups.Create(group);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+
+            Assert.AreEqual(oldGroups, newGroups);
+
+
+            app.Auth.Logout();
+        }
+
+        [Test]
+        public void BadNameGroupCreationTestes()
+        {
+            GroupData group = new GroupData("a'a");
+            group.Heder = "";
+            group.Footer = "";
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            app.Groups.Create(group);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+
+            Assert.AreEqual(oldGroups, newGroups);
+
+
             app.Auth.Logout();
         }
     }

@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenQA.Selenium;
 namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
     {
+       
+
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
 
-    public ContactHelper Remove(int v)
+        public ContactHelper Remove(int v)
         {
                 SelectContact(v);
                 RemoveContact();
@@ -16,7 +19,28 @@ namespace WebAddressbookTests
                 return this;
         }
 
-      private bool ContactIsPresent()
+        public List<ContactData> GetContactList()
+        {
+
+            List<ContactData> contacts = new List<ContactData>();
+                manager.Navigator.OpenHomePage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name='entry']"));
+                foreach (IWebElement element in elements)
+                {
+                    var info = element.FindElements(By.CssSelector("td"));
+                    var contact = new ContactData(info[2].Text, info[1].Text)
+                    {
+                        Id = element.FindElement(By.TagName("input")).GetAttribute("value")
+                    };
+                contacts.Add(contact);
+                }
+
+          return contacts;
+
+        }
+
+
+        private bool ContactIsPresent()
          {
             return
                  IsElementPresent(By.Name("entry"));
@@ -46,9 +70,10 @@ namespace WebAddressbookTests
                 InitContactModification();
                 FillContactForm(newData);
                 SubmitContactModification();
-                return this;
-   
+               
+            return this;
         }
+      
 
         public ContactHelper SubmitContactModification()
         {
@@ -71,13 +96,12 @@ namespace WebAddressbookTests
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index+1) + "]")).Click();
             return this;
         }
 
         public ContactHelper Create(ContactData contact)
         {
-            manager.Navigator.GoToContactsPage();
             InitContactCreation();
             FillContactForm(contact);
             SubmitContactCreation();

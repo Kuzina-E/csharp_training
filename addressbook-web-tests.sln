@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "addressbook-web-tests", "addressbook-web-tests\addressbook-web-tests.csproj", "{238BB51F-BFC9-47CA-A328-9E96CC044765}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1AD222F4-D1ED-4AE3-8CFB-62BDF0A1727C}"
+	ProjectSection(SolutionItems) = preProject
+		NUnitTestClass.cs = NUnitTestClass.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
