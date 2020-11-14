@@ -11,44 +11,18 @@ namespace WebAddressbookTests
 
         public GroupData(string name)
         {
-            this.name = name;
+           Name = name;
         }
 
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-
-        public string Heder
-        {
-            get
-            {
-                return heder;
-            }
-            set
-            {
-                heder = value;
-            }
-        }
+        public string Name { get; set; }
+        public string Heder { get; set; }
+        public string Id { get; set; }
 
         public string Footer
         {
-            get
-            {
-                return footer;
-            }
-            set
-            {
-                footer = value;
-            }
+            get;
+            set;
         }
 
         public bool Equals([AllowNull] GroupData other)

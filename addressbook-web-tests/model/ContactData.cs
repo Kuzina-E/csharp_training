@@ -10,38 +10,14 @@ namespace WebAddressbookTests
 
         public ContactData(string firstname, string lastname)
         {
-            this.firstname = firstname;
-            this.lastname = lastname;
+            FirstName = firstname;
+            LastName = lastname;
         }
 
-        public object Id
-        {
-            get;
-            set;
-        }
+        public object Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
-        public string FirstName
-        {
-            get
-            {
-                return firstname;
-            }
-            set
-            {
-                firstname = value;
-            }
-        }
-        public string LastName
-        {
-            get
-            {
-                return lastname;
-            }
-            set
-            {
-                lastname = value;
-            }
-        }
         public bool Equals(ContactData other)
         {
             if (Object.ReferenceEquals(other, null))
