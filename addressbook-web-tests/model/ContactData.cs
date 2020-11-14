@@ -41,12 +41,16 @@ namespace WebAddressbookTests
         {
             return "firstname=" + FirstName; 
         }
-
+ 
         public int CompareTo(ContactData other)
         {
             if (Object.ReferenceEquals(other, null))
             {
                 return 1;
+            }
+            if (LastName.CompareTo(other.LastName) != 0)
+            {
+                return LastName.CompareTo(other.LastName);
             }
             return FirstName.CompareTo(other.FirstName);
         }
