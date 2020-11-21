@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
     {
        
-
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
@@ -40,12 +41,84 @@ namespace WebAddressbookTests
             };
         }
 
+        public string GetComtactInformationFromDetails(int index)
+        {
+            manager.Navigator.OpenHomePage();
+            InitViewContactsDetails(index);
+
+              string details = driver.FindElement(By.Id("content")).Text;
+
+              return details;
+        }
+
+        public string CollectContactInfo(ContactData contact)
+        {
+
+            if (contact.FirstName != "" ||
+                contact.LastName != "" ||
+                contact.Address != "")
+            {
+
+            if (contact.FirstName != "" ||
+                contact.LastName != "")
+
+                {
+                    info = info + System.String.Format(@"{0} {1}", contact.FirstName, contact.LastName);
+                    info = Regex.Replace(info, "  ", " ");
+                }
+            }
+            if (contact.Address != "")
+
+                {
+                    info = info + "\n" + contact.Address;
+                }
+         
+
+            if (contact.HomePhone != "" ||
+                contact.MobilePhone != "" ||
+                contact.WorkPhone != "")
+            {
+                info = info + "\n";
+
+                if (contact.HomePhone != "")
+                {
+                    info = info + "\nH: " + contact.HomePhone;
+                }
+
+                if (contact.MobilePhone != "")
+                {
+                   info = info + "\nM: " + contact.MobilePhone;
+                 
+
+                }
+
+                if (contact.WorkPhone != "")
+                {
+                    info = info + "\nW: " + contact.WorkPhone;
+                }
+            }
+
+            info.Trim();
+            info = Regex.Replace(info, "  ", " ");
+            return info;
+        }
+        
+
+        public void InitViewContactsDetails(int index)
+        {
+            driver.FindElements(By.Name("entry"))[index]
+                 .FindElements(By.TagName("td"))[6]
+                 .FindElement(By.TagName("a")).Click();
+        }
+
         public void InitContactsModification(int index)
         {
             driver.FindElements(By.Name("entry"))[index]
                  .FindElements(By.TagName("td"))[7]
                  .FindElement(By.TagName("a")).Click();
         }
+
+
 
         public ContactData GetComtactInformationFromTable(int index)
         {
@@ -69,6 +142,7 @@ namespace WebAddressbookTests
         }
 
         private List<ContactData> contactCache = null;
+        private string info = null;
 
         public List<ContactData> GetContactList()
         {

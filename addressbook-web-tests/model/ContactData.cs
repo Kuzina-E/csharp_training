@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 namespace WebAddressbookTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
@@ -46,7 +49,8 @@ namespace WebAddressbookTests
                 return "";
             }
 
-          return phone.Replace(" ","").Replace("-","").Replace("(","").Replace(")","") + "\n";
+            return Regex.Replace(phone, "[-() ]", "") +"\n";
+               // phone.Replace(" ","").Replace("-","").Replace("(","").Replace(")","") + "\r\n";
         }
 
         public bool Equals(ContactData other)
@@ -85,5 +89,7 @@ namespace WebAddressbookTests
             }
             return FirstName.CompareTo(other.FirstName);
         }
+
+        
     }
 }
