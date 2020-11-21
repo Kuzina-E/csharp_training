@@ -273,6 +273,17 @@ namespace WebAddressbookTests
             driver.FindElement(By.LinkText("add new")).Click();
             return this;
         }
+
+        public int GetNumberOfSearchResults()
+        {
+            manager.Navigator.OpenHomePage();
+
+            string text = driver.FindElement(By.TagName("label")).Text;
+
+           Match m = new Regex(@"\d+").Match(text);
+           return Int32.Parse(m.Value);
+        }
+
         
     }
 }
