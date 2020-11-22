@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 using NUnit.Framework;
-
+using Newtonsoft.Json;
 
 namespace WebAddressbookTests
 {
@@ -24,14 +26,46 @@ namespace WebAddressbookTests
             return groups;
         }
 
-      
+      public static IEnumerable<GroupData> GroupDataFromCsvFile()
+        {
+            List<GroupData> groups = new List<GroupData>();
+           string[] lines = File.ReadAllLines(@"groups.csv");
 
-        [Test, TestCaseSource("RandomGroupDataProvider")]
+            foreach(string l in lines)
+            {
+              string[] parts =  l.Split(',');
+                groups.Add(new GroupData(parts[0])
+                {
+                    Heder = parts[1],
+                    Footer= parts[2]
+
+                });  
+                  
+            }
+            return groups;
+
+        }
+
+        public static IEnumerable<GroupData> GroupDataFromXmlFile()
+        {
+           
+            return (List<GroupData>)
+                new XmlSerializer(typeof(List<GroupData>))
+                 .Deserialize(new StreamReader(@"groups.xml"));
+        }
+
+        public static IEnumerable<GroupData> GroupDataFromJsonFile()
+        {
+           return JsonConvert.DeserializeObject<List<GroupData>>(
+
+                File.ReadAllText(@"groups.json"));
+           
+        }
+
+        [Test, TestCaseSource("GroupDataFromXmlFile")]
+
         public void GroupCreationTestes(GroupData group)
         {
-           // GroupData group = new GroupData("aaa");
-           // group.Heder = "ddd";
-           // group.Footer = "sss";
 
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
@@ -51,5 +85,10 @@ namespace WebAddressbookTests
 
             app.Auth.Logout();
         }
+
+
+
+
+     
     }
 }

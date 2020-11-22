@@ -13,7 +13,10 @@ namespace WebAddressbookTests
         {
            Name = name;
         }
-
+        public GroupData()
+        {
+          
+        }
 
         public string Name { get; set; }
         public string Heder { get; set; }

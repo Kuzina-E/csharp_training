@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -14,8 +17,6 @@ namespace WebAddressbookTests
         [TestFixture]
         public class ContactCreationTests :  AuthTestBase
     {
-
-
 
        public static IEnumerable<ContactData> RandomContactDataProvider()
         {
@@ -31,8 +32,22 @@ namespace WebAddressbookTests
             return contacts;
         }
 
+        public static IEnumerable<ContactData> ContactDataFromXmlFile()
+        {
+            return (List<ContactData>)
+                new XmlSerializer(typeof(List<ContactData>))
+                 .Deserialize(new StreamReader(@"contacts.xml"));
+        }
 
-        [Test, TestCaseSource("RandomContactDataProvider")]
+        public static IEnumerable<ContactData> ContactDataFromJsonFile()
+        {
+            return JsonConvert.DeserializeObject<List<ContactData>>(
+
+                File.ReadAllText(@"contacts.json"));
+        }
+
+
+        [Test, TestCaseSource("ContactDataFromJsonFile")]
         public void ContactCreateTests(ContactData contact)
         {
            // ContactData contact = new ContactData("Ivanov", "Ivan");
