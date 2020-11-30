@@ -5,17 +5,17 @@ using System.Xml.Serialization;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using Excel = Microsoft.Office.Interop.Excel;
-
+using System.Linq;
 namespace WebAddressbookTests
 {
-    [TestFixture] 
-    public class GroupCreationTests : AuthTestBase
+    [TestFixture]
+    public class GroupCreationTests : GroupTestBase
     {
         public static IEnumerable<GroupData> RandomGroupDataProvider()
         {
-            List<GroupData> groups= new List<GroupData>();
+            List<GroupData> groups = new List<GroupData>();
 
-            for (int i =0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 groups.Add(new GroupData(GenerateRandomString(30))
                 {
@@ -27,21 +27,21 @@ namespace WebAddressbookTests
             return groups;
         }
 
-      public static IEnumerable<GroupData> GroupDataFromCsvFile()
+        public static IEnumerable<GroupData> GroupDataFromCsvFile()
         {
             List<GroupData> groups = new List<GroupData>();
-           string[] lines = File.ReadAllLines(@"groups.csv");
+            string[] lines = File.ReadAllLines(@"groups.csv");
 
-            foreach(string l in lines)
+            foreach (string l in lines)
             {
-              string[] parts =  l.Split(',');
+                string[] parts = l.Split(',');
                 groups.Add(new GroupData(parts[0])
                 {
                     Heder = parts[1],
-                    Footer= parts[2]
+                    Footer = parts[2]
 
-                });  
-                  
+                });
+
             }
             return groups;
 
@@ -49,7 +49,7 @@ namespace WebAddressbookTests
 
         public static IEnumerable<GroupData> GroupDataFromXmlFile()
         {
-           
+
             return (List<GroupData>)
                 new XmlSerializer(typeof(List<GroupData>))
                  .Deserialize(new StreamReader(@"groups.xml"));
@@ -57,51 +57,51 @@ namespace WebAddressbookTests
 
         public static IEnumerable<GroupData> GroupDataFromJsonFile()
         {
-           return JsonConvert.DeserializeObject<List<GroupData>>(
+            return JsonConvert.DeserializeObject<List<GroupData>>(
 
-                File.ReadAllText(@"groups.json"));
-           
+                 File.ReadAllText(@"groups.json"));
+
         }
-        public static IEnumerable<GroupData> GroupDataFromExcelFile()
-        {
-            List<GroupData> groups = new List<GroupData>();
+        /* public static IEnumerable<GroupData> GroupDataFromExcelFile()
+         {
+             List<GroupData> groups = new List<GroupData>();
 
-            Excel.Application app = new Excel.Application();
-            app.Visible = true;
-            Excel.Workbook wb = app.Workbooks.Open(Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx"));
-            Excel.Worksheet sheet = (Excel.Worksheet)wb.Sheets[1];
+             Excel.Application app = new Excel.Application();
+             app.Visible = true;
+             Excel.Workbook wb = app.Workbooks.Open(Path.Combine(Directory.GetCurrentDirectory(), @"groups.xlsx"));
+             Excel.Worksheet sheet = (Excel.Worksheet)wb.Sheets[1];
 
-            Excel.Range range = sheet.UsedRange;
-            for (int i = 1; i <= range.Rows.Count; i++)
-            {
-                groups.Add(new GroupData()
-                {
-                    Name = range.Cells[i, 1].Value,
-                    Heder = range.Cells[i, 2].Value,
-                    Footer = range.Cells[i, 3].Value
-                });
-            }
+             Excel.Range range = sheet.UsedRange;
+             for (int i = 1; i <= range.Rows.Count; i++)
+             {
+                 groups.Add(new GroupData()
+                 {
+                     Name = range.Cells[i, 1].Value,
+                     Heder = range.Cells[i, 2].Value,
+                     Footer = range.Cells[i, 3].Value
+                 });
+             }
 
-            wb.Close();
-            app.Visible = false;
-            app.Quit();
+             wb.Close();
+             app.Visible = false;
+             app.Quit();
 
-            return groups;
-        }
+             return groups;
+         }*/
         [Test, TestCaseSource("GroupDataFromXmlFile")]
 
         public void GroupCreationTestes(GroupData group)
         {
 
-            List<GroupData> oldGroups = app.Groups.GetGroupList();
+            List<GroupData> oldGroups = GroupData.GetAll(); //app.Groups.GetGroupList();
 
             app.Groups.Create(group);
 
-             
+
             Assert.AreEqual(oldGroups.Count + 1, app.Groups.GetGroupCount());
 
 
-            List<GroupData> newGroups = app.Groups.GetGroupList();
+            List<GroupData> newGroups = GroupData.GetAll(); //app.Groups.GetGroupList();
 
             oldGroups.Add(group);
             oldGroups.Sort();
@@ -112,9 +112,33 @@ namespace WebAddressbookTests
             app.Auth.Logout();
         }
 
+        [Test]
+
+        public void TestDBConnectivity()
+        {
+            DateTime start = DateTime.Now;
+            List<GroupData> fromUI = app.Groups.GetGroupList();
+            DateTime end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
 
 
 
-     
+            start = DateTime.Now;
+            List<GroupData> fromDB = GroupData.GetAll();
+           // db.Close();
+            end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+
+        }
+
+        public void TestDBConnectivity2()
+        {
+           foreach(ContactData contact in GroupData.GetAll()[0].GetContacts())
+            {
+                System.Console.Out.WriteLine(contact);
+            }
+
+
+        }
     }
 }

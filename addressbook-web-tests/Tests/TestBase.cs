@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 
@@ -7,6 +10,7 @@ namespace WebAddressbookTests
 {
     public class TestBase
     {
+        public static bool PERFORM_LONG_UI_CHECKS = true;
         public static Random rnd = new Random();
 
 

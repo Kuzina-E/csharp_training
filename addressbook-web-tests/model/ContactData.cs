@@ -1,9 +1,12 @@
-﻿using System;
-using System.Globalization;
+﻿using LinqToDB.Mapping;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WebAddressbookTests
 {
+    [Table(Name = "addressbook")]
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string allPhones;
@@ -19,12 +22,20 @@ namespace WebAddressbookTests
             LastName = lastname;
         }
 
+
+        [Column(Name = "id"), PrimaryKey]
         public object Id { get; set; }
+        [Column(Name = "firstname")]
         public string FirstName { get; set; }
+        [Column(Name = "lastname")]
         public string LastName { get; set; }
+        [Column(Name = "address")]
         public string Address { get; set; }
+        [Column(Name = "home")]
         public string HomePhone { get; set; }
+        [Column(Name = "mobile")]
         public string MobilePhone { get; set; }
+        [Column(Name = "work")]
         public string WorkPhone { get; set; }
 
         public string AllPhones
@@ -95,6 +106,23 @@ namespace WebAddressbookTests
             return FirstName.CompareTo(other.FirstName);
         }
 
-        
+        public List<ContactData> GetAll()
+        {
+            using (AddressbookDB db = new AddressbookDB())
+            {
+                return (from c in db.Contacts select c).ToList();
+            }
+        }
+
+        public List<GroupData> GetGroups()
+        {
+            using (AddressbookDB db = new AddressbookDB())
+            {
+                return (from g in db.Groups
+                        from gcr in db.GCR.Where(p => p.ContactId == Id && p.GroupId == g.Id)
+                        select g).Distinct().ToList();
+            }
+        }
+
     }
 }

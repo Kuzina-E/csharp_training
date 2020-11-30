@@ -14,10 +14,22 @@ namespace WebAddressbookTests
 
         public ContactHelper Remove(int v)
         {
-                SelectContact(v);
+            manager.Navigator.OpenHomePage();
+
+            SelectContact(v);
                 RemoveContact();
             manager.Navigator.OpenHomePage();
             return this;
+        }
+
+        public ContactHelper Remove(ContactData contact)
+        {
+            manager.Navigator.OpenHomePage();
+            SelectContact(contact.Id);
+            RemoveContact();
+            manager.Navigator.OpenHomePage();
+            return this;
+
         }
 
         public ContactData GetComtactInformationFromEditForm(int index)
@@ -243,6 +255,12 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper SelectContact(string contactId)
+        {
+            driver.FindElement(By.Id(contactId)).Click();
+            return this;
+
+        }
         public ContactHelper Create(ContactData contact)
         {
             InitContactCreation();

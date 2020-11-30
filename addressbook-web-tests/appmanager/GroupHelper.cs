@@ -68,7 +68,20 @@ namespace WebAddressbookTests
       
         }
 
-       private bool GroupIsPresent()
+        public GroupHelper Remove(GroupData group)
+        {
+
+            manager.Navigator.GoToGroupsPage();
+
+
+            SelectGroup(group.Id);
+            RemoveGroup();
+            ReturnToGroupsPage();
+            return this;
+
+        }
+
+        private bool GroupIsPresent()
         {
             return
                 IsElementPresent(By.Name("selected[]"));
@@ -111,6 +124,13 @@ namespace WebAddressbookTests
         public GroupHelper SelectGroup(int index)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index+1) + "]")).Click();
+            return this;
+
+        }
+
+        public GroupHelper SelectGroup(string id)
+        {
+            driver.FindElement(By.XPath("(//input[@name='selected[]' and @value ='"+id+"'])")).Click();
             return this;
 
         }
@@ -169,7 +189,7 @@ namespace WebAddressbookTests
         
             return this;
         }
-
         
+
     }
 }
