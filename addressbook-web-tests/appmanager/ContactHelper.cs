@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -32,6 +33,12 @@ namespace WebAddressbookTests
             manager.Navigator.OpenHomePage();
             return this;
 
+        }
+
+        public string GetContactId()
+        {
+            manager.Navigator.OpenHomePage();
+            return driver.FindElements(By.XPath("//tr/td/input[@name='selected[]']")).Last().GetAttribute("value");
         }
 
         public ContactData GetComtactInformationFromEditForm(int index)

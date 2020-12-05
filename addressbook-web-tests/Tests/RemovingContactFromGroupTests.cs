@@ -12,7 +12,11 @@ namespace WebAddressbookTests
         [Test]
         public void TestRemoveContactFromGroup()
         {
-            
+            if (GroupData.GetAll().Count == 0)
+            {
+                app.Groups.Create(new GroupData("aaa", "sss", "ddd"));
+            }
+
             List<GroupData> groups = GroupData.GetAll();
 
             for (int i = 0; i < groups.Count(); i++)
@@ -23,7 +27,9 @@ namespace WebAddressbookTests
 
                 {
                     app.Contacts.Create(new ContactData("aaa", "aaa"));
+
                     ContactData createdContact = ContactData.GetAll().First();
+
                     app.Contacts.AddContactToGroup(createdContact, group);
                 }
       
